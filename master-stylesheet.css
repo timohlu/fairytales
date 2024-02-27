@@ -1,7 +1,7 @@
 /* [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] GENERAL */
 @font-face {
   font-family: "Main";
-  src: url(./fonts/PPNeueMontrealArabic-Regular.otf);
+  src: url(./fonts/ABCArizonaFlareVariable.ttf);
   font-display: block;
 }
 
@@ -27,7 +27,7 @@ body {
   background-color: var(--black);
   color: white;
   font-family: Main;
-  font-weight: 400;
+  font-weight: 300;
   overflow-x: hidden;
   color: var(--offwhite);
 }
