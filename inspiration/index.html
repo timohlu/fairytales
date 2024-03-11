@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Inspiration</title>
+  <link rel="icon" type="image/svg+xml" href="/public/logos/FT-OFF-WHITE_001.svg">
+  <link rel="stylesheet" href="/master-stylesheet.css">
+  <script defer src="/global.js"></script>
+</head>
+
+<body>
+  <nav id="navigation">
+    <a href="/" class="nav-logo-link" onclick="setLocalStorage('Fairytales')">
+      <img src="/assets/logos/FT-WHITE_001.svg" alt="Fairytales Logo" class="nav-logo">
+    </a>
+    <div class="navigation-links-container">
+      <a class="nav-link restricted" href="#">Colors</a>
+      <a class="nav-link" href="/inspiration">Inspiration</a>
+      <a class="nav-link" href="/info">Info</a>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="toggleSwitch">
+      <span class="slider round" title="Switch Layout"></span>
+    </label>
+  </nav>
+
+  <div class="navigation-toggle" id="nav-toggle"><span class="close-icon">✕</span></div>
+
+  <main class="inspiration-container">
+    <div class="category-container" id="container">
+    </div>
+    <script>
+      // Define the path to the folder containing your images
+      const imagePath = "/assets/images/all/";
+
+      function loadImages() {
+        const imageContainer = document.getElementById("container");
+
+        fetch(imagePath)
+          .then(response => response.text())
+          .then(text => {
+            const regex = /<span class="name">(.*?)<\/span>/g;
+            const fileNames = [];
+            let match;
+            while ((match = regex.exec(text)) !== null) {
+              fileNames.push(match[1]);
+            }
+
+            console.log("Filenames:", fileNames);
+
+            const filteredFileNames = fileNames.filter(fileName => !fileName.includes(".DS_Store") && !fileName.includes(".."));
+
+            filteredFileNames.forEach(fileName => {
+              const trimmedFileName = fileName.trim();
+              if (trimmedFileName !== "") {
+                const img = document.createElement("img");
+                const imageUrl = imagePath + trimmedFileName;
+                img.src = imageUrl;
+                img.classList.add("inspo-image");
+                img.alt = "Inspiration Image";
+                img.loading = "lazy";
+                img.draggable = false;
+                img.addEventListener("dblclick", function () {
+                  downloadImage(imageUrl, trimmedFileName);
+                });
+
+                // Add error event listener to log failed image loading
+                img.addEventListener("error", function () {
+                  console.error("Failed to load image:", imageUrl);
+                });
+
+                imageContainer.appendChild(img);
+              }
+            });
+          })
+          .catch(error => console.error("Error loading images:", error));
+      }
+
+      window.onload = loadImages;
+
+      function downloadImage(imageUrl, fileName) {
+        console.log("Downloading image:", imageUrl);
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    </script>
+
+
+    <div class="bottom-navigation-container" id="bottom-nav">
+      <div class="help-container">
+        <div class="help-infobox" id="helpInfoBox">
+          <div class="help-divider">
+            <img src="/assets/icons/toggle-on.svg" alt="decorative svg icon" class="svg-icon-help">
+            <p class="help-text">Change the image layout with the Switch in the top right corner.</p>
+          </div>
+          <div class="help-divider">
+            <img src="/assets/icons/image.svg" alt="decorative svg icon" class="svg-icon-help">
+            <p class="help-text">Download images by double-clicking on them.</p>
+          </div>
+          <div class="help-divider">
+            <img src="/assets/icons/exclamation-circle-fill.svg" alt="decorative svg icon" class="svg-icon-help">
+            <p class="help-text">Images are not owned by me. More details under "Info".</p>
+          </div>
+          <div class="help-divider">
+            <img src="/assets/icons/eye-slash-fill.svg" alt="decorative svg icon" class="svg-icon-help">
+            <p class="help-text">This site may contain images with minor nudity or other R-Rated imagery. Viewer discretion is advised.</p>
+          </div>
+          <div class="help-divider">
+            <img src="/assets/icons/phone.svg" alt="decorative svg icon" class="svg-icon-help">
+            <p class="help-text">If you are on a mobile device you can scroll horizontally to see the other categories.</p>
+          </div>
+        </div>
+        <img src="/assets/icons/question-circle-fill.svg" alt="help icon svg - triggers help popup" class="help-trigger svg-icon-help" id="helpTrigger">
+      </div>
+      <!-- <div class="content-tabs-container" id="content-tabs">
+        <input id="artdirection" type="radio" name="category" class="content-tabs category-radio" data-category="artdirection" onclick="setLocalStorage('artdirection')">
+        <label for="artdirection">Art Direction</label>
+
+        <input id="lighting" type="radio" name="category" class="content-tabs category-radio" data-category="lighting" onclick="setLocalStorage('lighting')">
+        <label for="lighting">Lighting</label>
+
+        <input id="minimal" type="radio" name="category" class="content-tabs category-radio" data-category="minimal" onclick="setLocalStorage('minimal')">
+        <label for="minimal">Minimal</label>
+
+        <input id="color" type="radio" name="category" class="content-tabs category-radio" data-category="color" onclick="setLocalStorage('color')">
+        <label for="color">Color</label>
+
+        <input id="cinema" type="radio" name="category" class="content-tabs category-radio" data-category="cinema" onclick="setLocalStorage('cinema')">
+        <label for="cinema">Cinema</label>
+
+        <input id="photography" type="radio" name="category" class="content-tabs category-radio" data-category="photography" onclick="setLocalStorage('photography')">
+        <label for="photography">Photography</label>
+
+        <input id="motion" type="radio" name="category" class="content-tabs category-radio" data-category="motion" onclick="setLocalStorage('motion')">
+        <label for="motion">Motion</label>
+
+        <input id="layout" type="radio" name="category" class="content-tabs category-radio" data-category="layout" onclick="setLocalStorage('layout')">
+        <label for="layout">Layout</label>
+
+        <input id="uxui" type="radio" name="category" class="content-tabs category-radio" data-category="uxui" onclick="setLocalStorage('uxui')">
+        <label for="uxui">UX/UI</label>
+      </div> -->
+    </div>
+  </main>
+</body>
+
+</html>

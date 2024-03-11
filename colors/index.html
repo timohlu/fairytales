@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" type="image/x-icon" href="/public/logos/FT-OFF-WHITE_001.svg">
+  <title>Colors</title>
+  <link rel="stylesheet" href="master-stylesheet.css">
+  <script defer src="colorFetch.js"></script>
+</head>
+
+<body>
+  <!-- NAVIGATION -->
+  <nav id="navigation">
+    <a href="/" class="nav-logo-link" onclick="setLocalStorage('Fairytales')">
+      <img src="/logos/FT-WHITE_001.svg" alt="Fairytales Logo" class="nav-logo">
+    </a>
+    <div class="navigation-links-container">
+      <a class="nav-link" href="/colors">Shades</a>
+      <a class="nav-link" href="/inspiration">Inspiration</a>
+      <a class="nav-link" href="/info">Info</a>
+    </div>
+  </nav>
+
+  <div class="navigation-toggle" id="nav-toggle">✕</div>
+
+  <!-- CONTENT -->
+  <main class="color-container" id="container">
+    <div class="bottom-navigation-container" id="bottom-nav">
+      <div class="help-container">
+        <div class="help-infobox" id="helpInfoBox">
+          <div class="help-divider">
+            <img src="/icons/image.svg" alt="decorative svg icon" class="svg-icon-help">
+            <p class="help-text">Copy the hexcode by double-clicking on a shade.</p>
+          </div>
+        </div>
+        <img src="/icons/question-circle-fill.svg" alt="help icon svg - triggers help popup"
+          class="help-trigger svg-icon-help" id="helpTrigger">
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>
