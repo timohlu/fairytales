@@ -27,39 +27,83 @@ function updateNavState() {
 isNavHidden = localStorage.getItem('navbarHidden') === 'true' || false;
 updateNavState();
 
+// LOAD IMAGES
+const imagePath = "assets/images/all/";
+
+function loadImages() {
+  const imageContainer = document.getElementById("container");
+
+  fetch(imagePath)
+    .then(response => response.text())
+    .then(text => {
+      const regex = /<span class="name">(.*?)<\/span>/g;
+      const fileNames = [];
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        fileNames.push(match[1]);
+      }
+
+      console.log("Filenames:", fileNames);
+
+      const filteredFileNames = fileNames.filter(fileName => !fileName.includes(".DS_Store") && !fileName.includes(".."));
+
+      filteredFileNames.forEach(fileName => {
+        const trimmedFileName = fileName.trim();
+        if (trimmedFileName !== "") {
+          const img = document.createElement("img");
+          const imageUrl = imagePath + trimmedFileName;
+          img.src = imageUrl;
+          img.classList.add("inspo-image");
+          img.alt = "Inspiration Image";
+          img.loading = "lazy";
+          img.draggable = false;
+          img.addEventListener("dblclick", function () {
+            downloadImage(imageUrl, trimmedFileName);
+          });
+
+          // Add error event listener to log failed image loading
+          img.addEventListener("error", function () {
+            console.error("Failed to load image:", imageUrl);
+          });
+
+          imageContainer.appendChild(img);
+        }
+      });
+    })
+    .catch(error => console.error("Error loading images:", error));
+}
+
+window.onload = loadImages;
+
+function downloadImage(imageUrl, fileName) {
+  console.log("Downloading image:", imageUrl);
+  const link = document.createElement('a');
+  link.href = imageUrl;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
 
 // Toggle Views
-document.addEventListener('DOMContentLoaded', function () {
-  const toggleSwitch = document.getElementById("toggleSwitch");
-  const images = document.querySelectorAll('.inspo-image');
-  const container = document.getElementById("container");
+const toggleSwitch = document.getElementById("toggleSwitch");
+const images = document.querySelectorAll('.inspo-image');
+const container = document.getElementById("container");
 
-  const savedState = localStorage.getItem('toggleState');
-  if (savedState === 'true') {
-    toggleSwitch.checked = true;
-    container.classList.add("spacing");
-    images.forEach(function (image) {
-      image.classList.add("contain");
-    });
-  }
-
-  toggleSwitch.addEventListener("change", function () {
-    images.forEach(function (image) {
-      if (toggleSwitch.checked) {
-        image.classList.add("contain");
-      } else {
-        image.classList.remove("contain");
-      }
-    });
-
-    if (toggleSwitch.checked) {
-      container.classList.add("spacing");
-    } else {
-      container.classList.remove("spacing");
-    }
-
-    localStorage.setItem('toggleState', toggleSwitch.checked);
+function toggleClasses() {
+  images.forEach(function (image) {
+    image.classList.toggle("contain", toggleSwitch.checked);
   });
+  container.classList.toggle("spacing", toggleSwitch.checked);
+}
+
+const savedState = localStorage.getItem('toggleState');
+toggleSwitch.checked = savedState === 'true';
+toggleClasses(); // Apply initial state
+
+toggleSwitch.addEventListener("change", function () {
+  toggleClasses(); // Apply class toggling when switch changes
+  localStorage.setItem('toggleState', toggleSwitch.checked); // Save state to localStorage
 });
 
 // Show Help on Hover
@@ -74,63 +118,4 @@ helpTrigger.addEventListener("mouseover", () => {
 helpTrigger.addEventListener("mouseleave", () => {
   infobox.style.display = "none";
   helpTrigger.classList.remove("scaled");
-});
-
-// Download Images on Double-Click
-function downloadImage(element) {
-  var imagePath = element.getAttribute("src");
-  var imageName = imagePath.split('/').pop();
-
-  fetch(imagePath)
-    .then(response => response.blob())
-    .then(blob => {
-      var anchorElement = document.createElement("a");
-      var objectURL = URL.createObjectURL(blob);
-
-      anchorElement.href = objectURL;
-      anchorElement.download = imageName;
-
-      document.body.appendChild(anchorElement);
-      anchorElement.click();
-
-      document.body.removeChild(anchorElement);
-
-      URL.revokeObjectURL(objectURL);
-    })
-    .catch(error => console.error("Error downloading image:", error));
-}
-
-// Image Count
-document.addEventListener('DOMContentLoaded', () => {
-  const imageCountElement = document.getElementById('count');
-  const imageContainer = document.getElementById('container');
-
-  let currentCount = 0;
-  const targetCount = document.querySelectorAll('.inspo-image').length;
-  const animationDuration = 1000;
-
-  const updateImageCount = () => {
-    imageCountElement.innerHTML = currentCount;
-  };
-
-  const incrementCounter = () => {
-    if (currentCount < targetCount) {
-      currentCount++;
-      updateImageCount();
-    } else {
-      clearInterval(counterInterval);
-    }
-  };
-
-  updateImageCount();
-
-  const observer = new MutationObserver(() => {
-    currentCount = 0;
-    incrementCounter();
-  });
-
-  const observerConfig = { childList: true, subtree: true };
-  observer.observe(imageContainer, observerConfig);
-
-  const counterInterval = setInterval(incrementCounter, animationDuration / targetCount);
 });
