@@ -28,7 +28,7 @@ isNavHidden = localStorage.getItem('navbarHidden') === 'true' || false;
 updateNavState();
 
 // LOAD IMAGES
-const imagePath = "./inspiration/images/";
+const imagePath = "assets/images/";
 
 function loadImages() {
   const imageContainer = document.getElementById("container");
