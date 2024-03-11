@@ -1,4 +1,4 @@
-// Navigation Hide on Scroll
+
 let isNavHidden = false;
 
 const navbar = document.getElementById('navigation');
@@ -27,8 +27,8 @@ function updateNavState() {
 isNavHidden = localStorage.getItem('navbarHidden') === 'true' || false;
 updateNavState();
 
-// LOAD IMAGES
-const imagePath = "assets/images/all/";
+
+const imagePath = "/inspiration/images/";
 
 function loadImages() {
   const imageContainer = document.getElementById("container");
@@ -61,7 +61,6 @@ function loadImages() {
             downloadImage(imageUrl, trimmedFileName);
           });
 
-          // Add error event listener to log failed image loading
           img.addEventListener("error", function () {
             console.error("Failed to load image:", imageUrl);
           });
@@ -85,7 +84,7 @@ function downloadImage(imageUrl, fileName) {
   document.body.removeChild(link);
 }
 
-// Toggle Views
+
 const toggleSwitch = document.getElementById("toggleSwitch");
 const images = document.querySelectorAll('.inspo-image');
 const container = document.getElementById("container");
@@ -99,14 +98,14 @@ function toggleClasses() {
 
 const savedState = localStorage.getItem('toggleState');
 toggleSwitch.checked = savedState === 'true';
-toggleClasses(); // Apply initial state
+toggleClasses();
 
 toggleSwitch.addEventListener("change", function () {
-  toggleClasses(); // Apply class toggling when switch changes
-  localStorage.setItem('toggleState', toggleSwitch.checked); // Save state to localStorage
+  toggleClasses();
+  localStorage.setItem('toggleState', toggleSwitch.checked);
 });
 
-// Show Help on Hover
+
 const helpTrigger = document.getElementById("helpTrigger");
 const infobox = document.getElementById("helpInfoBox");
 
